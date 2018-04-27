@@ -10,19 +10,33 @@ body{
   	z-index: 1000;
   	width: 100%;
   	min-height: 60px !important;
-  	padding: 5px;
+  	/*padding: 5px;*/
   	text-align: center;
   	top: 0;
   	left: 0px;
   	background: #333; 
-  	border-bottom: 4px solid #CFCFCF;
+  	/*border-bottom: 4px solid #CFCFCF;*/
   	overflow: auto;
+}
+
+.header_main{
+	top: 0;
+	left: 0px;
+	overflow: auto;
+	height: auto;
+	width: 100%;
+}
+
+.tools_row{
+	overflow:auto;
+	height: auto;
+	width: 100%;
+	background: #CFCFCF;
 }
 
 .header_item{
 	min-height: 60px !important;
-	padding-left: 6px;
-	padding-right: 6px;
+	padding: 6px;
 	background: transparent;
 	color: white;
 	float: left;
@@ -51,11 +65,35 @@ body{
 }
 
 .body_content{
-	margin-top: 80px;
+	margin-top: 110px;
 	padding: 5px;
 	left: 0;
 	right: 0;
 	overflow: auto;
+}
+
+
+.but_div1{
+	height: auto;
+	width: auto;
+	left: 0px;
+	text-align: center;
+	overflow: auto;
+}
+
+.input{
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        font-variant: normal;
+	color: #333;
+	padding: 2px;
+	margin: 4px;
+	text-align: center;
+	border-style: solid;
+	border-color: #333;
+	background-color: white;
+	cursor: pointer;
 }
 
 .chart_area{
