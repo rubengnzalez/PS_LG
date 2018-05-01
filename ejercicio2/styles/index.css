@@ -1,7 +1,8 @@
 
 body{
 	top: 0;
-	background: #F5F5F5
+	/*background: #F5F5F5*/
+	background: white;
 
 }
 
@@ -82,10 +83,10 @@ body{
 }
 
 .input{
-        font-family: Verdana, Geneva, sans-serif;
-        font-size: 14px;
-        font-style: normal;
-        font-variant: normal;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-variant: normal;
 	color: #333;
 	padding: 2px;
 	margin: 4px;
@@ -102,13 +103,24 @@ body{
 	text-align: center;
 	overflow: auto;
 	background: #EBEBEA
-
+	display: none;
 }
 
-.chart_area p{
-	min-height: 80px !important;
-	vertical-align: middle;
-	text-align: center;
+.load_container{
+	overflow: auto;
+	/* Safari display properties */
+	display: -webkit-flex; 
+    -webkit-justify-content: center; 
+    /* end Safari display properties */
+    display: flex;
+    justify-content: center;
+}
+
+#loading{
+	width: 50px;
+	height: 50px;
+	margin: 10px;
+	display: none;
 }
 
 .text_example{

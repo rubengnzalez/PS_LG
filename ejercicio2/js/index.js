@@ -1,31 +1,50 @@
 // Create connection manager object that compiles all connection operations like AJAX requests.
-var ConnectionMngr = {
-	getCategoriesData: function(){
+var connectionMngr = {
+	requestCategoriesData: function(){
 		// Check if url is defined so that request can be sent
 		if (this.url.length == 0){
-			console.log("getCategoriesData - Target URL is empty");
+			console.log("requestCategoriesData - Target URL is empty");
 			return false;
 		}
-		// Send AJAX Request to the previously specified URL and sets normalizeCategoriesData as function to be called when response is received
-		$.getJSON(this.url, normalizeCategoriesData)
+		// Send AJAX Request to the previously specified URL and call controller.manageCategoriesData to manage the returned data
+		$.getJSON(this.url, function(result){
+			controller.manageCategoriesData(result);
+		})
 		// Set done function, which runs if request is successful
 		.done(function(){
-			console.log("getCategoriesData - AJAX Request Success");
+			console.log("requestCategoriesData - AJAX Request Success: " + this.url);
 		})
 		// Set fail function, which runs if request fails 
 		.fail(function(){
-			console.log("getCategoriesData - AJAX Request Failed")
+			console.log("requestCategoriesData - AJAX Request Failed: " + this.url);
 		});
 	}
 };
 
-function normalizeCategoriesData(result){
-	alert("normalizeCategoriesData was called!!. Data size: " + result.length);
+var controller = {
+	getCategoriesData: function(){
+		connectionMngr.url = "http://s3.amazonaws.com/logtrust-static/test/test/data1.json";
+		connectionMngr.requestCategoriesData();
+	},
+	manageCategoriesData: function(result){
+		//$("#loading").hide();
+		//alert("manageCategoriesData was called!!. Data size: " + result.length);
 
+		// Check data format to know how to normalize
+
+	}	
 }
 
+
+
 $(document).ready(function(){
-	ConnectionMngr.url = "http://s3.amazonaws.com/logtrust-static/test/test/data1.json";
-	ConnectionMngr.getCategoriesData();
-	alert("HELLOOOOO");
+	//connectionMngr.url = "http://s3.amazonaws.com/logtrust-static/test/test/data1.json";
+	//connectionMngr.requestCategoriesData();
+	$("#butCategories").click(function(){
+		$("#loading").show();
+		controller.getCategoriesData();
+	});
 });
+
+
+
