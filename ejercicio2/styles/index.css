@@ -103,7 +103,12 @@ body{
 	text-align: center;
 	overflow: auto;
 	background: #EBEBEA
-	display: none;
+	/*display: none;*/
+}
+
+#categoriesPie{
+	width: 200px;
+	height: 200px;
 }
 
 .load_container{
