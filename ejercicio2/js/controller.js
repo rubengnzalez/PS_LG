@@ -5,11 +5,26 @@ var DATA2_URL = "http://s3.amazonaws.com/logtrust-static/test/test/data2.json";
 var DATA3_URL = "http://s3.amazonaws.com/logtrust-static/test/test/data3.json";
 
 var controller = {
+	// Define the data sources (URLs) from which we are going to obtain the categories
+	catDatasources: [DATA1_URL, DATA2_URL, DATA3_URL],
+	catResponded: 0,
+	// Categories normalized
 	normCategories: {},
 	getCategoriesData: function(){
-		connectionMngr.requestCategoriesData(DATA3_URL);
+		// reset value
+		this.catResponded = 0;
+		if(this.catDatasources.length > 0){
+			for(var i=0; i<this.catDatasources.length; i++){
+				connectionMngr.requestCategoriesData(this.catDatasources[i]);
+			}
+		}else{
+			console.log("ERROR - There are not data sources defined for Categories");
+			alert("Data could not be retrieved. No data sources available. Please, contact admin.");
+		}
 	},
 	manageCategoriesData: function(result){
+		// New response
+		this.catResponded++;
 		// Check data format to know how to normalize
 		if (result[0].hasOwnProperty("d")){
 			this.normalizeCatData1(result);
@@ -17,6 +32,12 @@ var controller = {
 			this.normalizeCatData2(result);
 		}else if(result[0].hasOwnProperty("raw")){
 			this.normalizeCatDataRaw(result);
+		}
+		// Verify if all datasources responded.
+		if(this.catResponded == this.catDatasources.length){
+			// All incoming data was normalized. Draw charts:
+			this.prepareDrawing();
+
 		}
 
 	},
@@ -40,10 +61,9 @@ var controller = {
 			// Update category data
 			this.normCategories[result[i].cat.toUpperCase()] = catObj;
 		}
-		console.log(this.normCategories);
+		console.log("Normalized Data1: " + this.normCategories);
 	},
 	normalizeCatData2: function(result){
-		console.log("NORMALIZANDO Data2");
 		for(var i=0; i<result.length; i++){
 			var catObj = {};
 			if(this.normCategories.hasOwnProperty(result[i].categ.toUpperCase())){
@@ -64,10 +84,9 @@ var controller = {
 			// Update category data
 			this.normCategories[result[i].categ.toUpperCase()] = catObj;
 		}
-		console.log(this.normCategories);
+		console.log("Normalized Data2: " + this.normCategories);
 	},
 	normalizeCatDataRaw: function(result){
-		console.log("NORMALIZANDO DataRaw");
 		for(var i=0; i<result.length; i++){
 			var catObj = {};
 			if(result[i].raw.length > 0){
@@ -76,9 +95,11 @@ var controller = {
 				var catMatch = result[i].raw.match(/\#cat \d+\#/gi);
 				// Check if raw field contains a date and a category. ONLY ONE DATE AND ONE CATEGORY ARE EXPECTED
 				if(dateMatch.length == 1 && catMatch.length == 1){
-					if(this.normCategories.hasOwnProperty(catMatch[0].toUpperCase())){
+					// Remove hash from the match, because catMatch will contain something like: #CAT 2#
+					var catClean = catMatch[0].substring(1, (catMatch[0].length-1));
+					if(this.normCategories.hasOwnProperty(catClean.toUpperCase())){
 						// get normalized Category object to add current data
-						catObj = this.normCategories[catMatch[0].toUpperCase()];
+						catObj = this.normCategories[catClean.toUpperCase()];
 						// Add current value to totalValue property
 						catObj.totalValue += result[i].val;
 						// Add current value to accumulator by date (in millis)
@@ -93,10 +114,22 @@ var controller = {
 						catObj[Date.parse(dateMatch[0])] = result[i].val;
 					}
 					// Update category data
-					this.normCategories[catMatch[0].toUpperCase()] = catObj;
+					this.normCategories[catClean.toUpperCase()] = catObj;
 				}
 			}
 		}
-		console.log(this.normCategories);
+		console.log("Normalized Raw Data: " + this.normCategories);
+	},
+	prepareDrawing: function(){
+		// Collect and format data as expected so that the charts can be drawn
+		// Prepare dataset for CATEGORIES SUMMARY - PIE:
+		var data = {};
+		for(var propertyName in this.normCategories) {
+			data[propertyName] = this.normCategories[propertyName].totalValue;
+		}
+		// Send data and draw it
+		drawCategoriesPie(data);
+
+		// Prepare dataset for CATEGORIES BY DATE - LINE:
 	}
 }
