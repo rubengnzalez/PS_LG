@@ -36,7 +36,7 @@ var controller = {
 		// Verify if all datasources responded.
 		if(this.catResponded == this.catDatasources.length){
 			// All incoming data was normalized. Draw charts:
-			this.prepareDrawing();
+			this.prepareCategoriesDrawing();
 
 		}
 
@@ -120,7 +120,14 @@ var controller = {
 		}
 		console.log("Normalized Raw Data: " + this.normCategories);
 	},
-	prepareDrawing: function(){
+	prepareCategoriesDrawing: function(){
+		// CATEGORIES SUMMARY - PIE
+		// this.prepareCategoriesPie();
+
+		// CATEGORIES BY DATE - LINE
+		this.prepareCategoriesByDateLine();
+	},
+	prepareCategoriesPie: function(){
 		// Collect and format data as expected so that the charts can be drawn
 		// Prepare dataset for CATEGORIES SUMMARY - PIE:
 		var data = {};
@@ -129,7 +136,53 @@ var controller = {
 		}
 		// Send data and draw it
 		drawCategoriesPie(data);
-
+	},
+	prepareCategoriesByDateLine: function(){
 		// Prepare dataset for CATEGORIES BY DATE - LINE:
+		var sendData = {};
+		var datasetsToDraw = [];
+		// dates will be the labels of X-axis
+	  	var dates = [];
+	  	var catValues = [];
+	  	for(catName in this.normCategories){
+	  		var cat = this.normCategories[catName];
+	  		for(fieldName in cat){
+	  			// ensure that current field is a date and dates does not contain this field
+	  			if(fieldName.match(/^[0-9]+$/g) && dates.indexOf(fieldName) == -1){
+	  				// Add date to array
+	  				dates[dates.length] = fieldName;
+	  			}
+	  		}
+	  	}
+	  	// at this point, dates are totally populated. Sort Dates array in ascending order:
+	  	dates.sort(function(a, b){return a-b});
+	  	// Fill catValues by following dates order and build dataset object to be drawn
+	  	for(catName in this.normCategories){
+	  		var cat = this.normCategories[catName];
+	  		for(var i=0; i < dates.length; i++){
+	  			// if current category does not contain a value for date, it will assign it a 0
+	  			catValues[i] = ((cat[dates[i]] != undefined) ? cat[dates[i]] : 0);
+	  		}
+	  		// at this point, arrays 'dates' and 'catValues' as filled
+	  		if (dates.length == catValues.length && dates.length > 0){
+	  			var dataset = {
+	  				label: catName,
+	  				// copy the values (not reference) to current array because it will be modified and would impact on previous references
+	  				data: catValues.slice(0, catValues.length) 
+	  			}
+	  			// store current dataset
+	  			datasetsToDraw[datasetsToDraw.length] = dataset;
+	  		}else{
+	  			console.log("ERROR - dates.length is not equal to catValues.length: drawing " + catName + " is not possible");
+	  			return;
+	  		}
+	  	}
+	  	// Build data to be sent
+	  	sendData = {
+	  		dates: dates,
+	  		datasets: datasetsToDraw
+	  	}
+	  	// Send data and draw it
+		drawCategoriesByDateLine(sendData);
 	}
 }
