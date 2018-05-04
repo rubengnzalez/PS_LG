@@ -97,4 +97,3 @@ function drawCategoriesByDateLine(data){
 	}
 }
 
-
