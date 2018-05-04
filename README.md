@@ -12,12 +12,25 @@ In addition, I would have liked to implement a more efficient way to calculate d
 For instance, to calculate divisors of 36:
     - Current implementation would need 18 iterations (max)
     - More last approach would require only 4 iterations:
-    36  /  2
-    18  /  2
-    9  /  3
-    3  /  3
+    36 / 2
+    18 / 2
+    9 / 3
+    3 / 3
     1
 
 It would be appreciated for high numbers.
 
+EJERCICIO 2:
 
+This exercise has been implemented by following the specifications, i.e. using AJAX to request the three data sources provided.
+To ease this task, I decided to use jQuery.
+
+I chose ChartJS to draw the charts.
+
+Regarding to the software architecture/structure, there are three layers:
+    - index.js, which implements the view and behavior of the elements in the user interface.
+    - controller.js, which manages all data and works as interface between pages and communication manager (data collection).
+    - comunicationManager.js, whose main task is to request data to same u other sources/servers. Currently, it only implements one generic function that receivesthe target URL.
+I thought that Object-Oriented Programming would be a good approach to understand the Controller and Communication Manager and keep them 'clean'.
+
+Responsive design (GUI): you can 'play' with browser size :)
