@@ -1,4 +1,3 @@
-
 EJERCICIO 1:
 
 This exercise has been implemented in order to find the most efficient way of calculating divisors and then classifying.
