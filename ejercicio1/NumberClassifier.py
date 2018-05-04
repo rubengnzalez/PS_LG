@@ -15,9 +15,12 @@ def classifyByDivisors(*numbersList):
                 numbersClasif.append(None)
             else:
                 sum = 0
-                for i in range(1, (item/2 +1)):
+                i = 1
+                while i < (item/2 +1):
                     if item%i == 0:
                         sum += i
+                    i += 1
+
                 print "item:", item, "sum:", sum
                 numbersClasif.append("deficient") if sum < item else None
                 numbersClasif.append("perfect") if sum == item else None
@@ -27,4 +30,4 @@ def classifyByDivisors(*numbersList):
 
 if __name__ == "__main__":
 
-    print classifyByDivisors(1, 6, 2, 18, 280000000, 2.35, "ere")
+    print classifyByDivisors(18, 6, 2, 28, 28562100, 2.35, "ere")
