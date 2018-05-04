@@ -122,7 +122,7 @@ var controller = {
 	},
 	prepareCategoriesDrawing: function(){
 		// CATEGORIES SUMMARY - PIE
-		// this.prepareCategoriesPie();
+		this.prepareCategoriesPie();
 
 		// CATEGORIES BY DATE - LINE
 		this.prepareCategoriesByDateLine();

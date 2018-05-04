@@ -1,9 +1,11 @@
 
 $(document).ready(function(){
+	// Request data as soon as the document is ready
+	controller.getCategoriesData();
+
 	$("#butCategories").click(function(){
 		$("#loading").show();
 		controller.getCategoriesData();
-		//drawCategoriesByDateLine();
 	});
 });
 
@@ -38,10 +40,11 @@ function drawCategoriesPie(data) {
 				title: {
 	            	display: true,
 	            	text: 'CATEGORIES SUMMARY',
-	            	fontSize: 14
+	            	fontSize: 16
         		}
 	    	}
 	  	});
+	  	$('.chart_area').show();
 	  	$("#loading").hide();
   	}else{
   		console.log("ERROR - names.length is not equal to values.length: drawCategoriesPie is not possible");
@@ -49,11 +52,17 @@ function drawCategoriesPie(data) {
 }
 
 function drawCategoriesByDateLine(data){
-	var ctx = document.getElementById("categoriesPie");
+	var ctx = document.getElementById("categoriesByDateLine");
 	// Get dates array to use them as values/labels in X-axis
 	var dates = data.dates;
 	// Get datasets (categories data)
 	var datasets = data.datasets;
+	// format date as: 25.Apr.1992
+	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	for(var x=0; x<dates.length; x++){
+		var auxDate = new Date(Number(dates[x]));
+		dates[x] = auxDate.getDate() + "." + months[auxDate.getMonth()] + "." + auxDate.getFullYear();
+	}
 	// Datasets customization
 	for(var i=0; i<datasets.length; i++){
 		// Apply background color by using array of colors defined above
@@ -64,7 +73,7 @@ function drawCategoriesByDateLine(data){
 		datasets[i].fill = false;
 		datasets[i].lineTension = 0;
 	}
-
+	// DRAW
 	if(datasets.length > 0){
 		var chartJsLine = new Chart(ctx, {
 			type: 'line',
@@ -76,11 +85,13 @@ function drawCategoriesByDateLine(data){
 				title: {
 	            	display: true,
 	            	text: 'CATEGORIES - VALUES BY DATE',
-	            	fontSize: 14,
+	            	fontSize: 16,
 	            	bezierCurve: false
 	    		}
 	    	}
 		});
+		$('.chart_area').show();
+		$("#loading").hide();
 	}else{
 		console.log("ERROR - drawCategoriesByDateLine: no datasets to draw")
 	}
